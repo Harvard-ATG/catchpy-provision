@@ -1,0 +1,15 @@
+---
+
+    # copy ssl certs
+    - include_tasks: install_ssl_certs.yml
+
+    # create sites-available
+    - include_tasks: drop_nginx_config.yml  with_ssl=True
+    - include_tasks: drop_nginx_config.yml  with_ssl=False
+
+    # disabled default site
+    - name: ensure default site is disabled
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+

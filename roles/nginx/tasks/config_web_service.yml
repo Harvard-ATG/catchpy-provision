@@ -1,22 +1,17 @@
 ---
-    - name: nginx configuration file
-      template:
-        src: "service_config.j2"
-        dest: /etc/nginx/sites-available/{{ service_name }}
-        backup: yes
-      notify: restart nginx
-      tags:
-        - nginx_config
-
-    - name: ensure default site is disabled
+    # link to correct ssl
+    - name: link ssl cert to correct file
       file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
+        src: "{{ nginx_ssl_dest_dir }}/{{ cert_prefix_to_enable }}_{{ service_name }}_harvardx_harvard_edu.crt"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
+        state: link
       notify: restart nginx
 
+
+    # enable correct nginx site
     - name: ensure service site is enabled
       file:
-        src: /etc/nginx/sites-available/{{ service_name }}
+        src: /etc/nginx/sites-available/{{ nginx_ssl is True | ternary('', 'nossl_') }}{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
       notify: restart nginx
