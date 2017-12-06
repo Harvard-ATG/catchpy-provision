@@ -1,17 +1,25 @@
 ---
-    # link to correct ssl
+    # at this point, we know webserver_dns
+
     - name: link ssl cert to correct file
       file:
-        src: "{{ nginx_ssl_dest_dir }}/{{ cert_prefix_to_enable }}_{{ service_name }}_harvardx_harvard_edu.crt"
+        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}.crt"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
         state: link
       notify: restart nginx
 
 
-    # enable correct nginx site
+    - name: replace the webserver_dns in nginx config
+      replace:
+        path: /etc/nginx/sites-available/{{ nginx_ssl is True | ternary('', 'nonssl_') }}{{ service_name }}
+        regexp: "CATCHPY_WEBSERVER_DNS"
+        replace: "{{ webserver_dns }}"
+        backup: yes
+
+
     - name: ensure service site is enabled
       file:
-        src: /etc/nginx/sites-available/{{ nginx_ssl is True | ternary('', 'nossl_') }}{{ service_name }}
+        src: /etc/nginx/sites-available/{{ nginx_ssl is True | ternary('', 'nonssl_') }}{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
       notify: restart nginx

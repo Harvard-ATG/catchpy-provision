@@ -1,19 +1,23 @@
 ---
     # parameters:
-    #   local_certs_dir: local dir to copy ssl certs from
-    #   cert_prefix_list: e.g. ['prod', 'devo']
-    #   cert_prefix_to_enable: from cert_pref_list, which one should be used
-    #   nginx_ssl: True|False  - config nginx to use ssl certs
     #
+    # common:
     #   service_name
-    #   webserver_dns
-    #   service_venv_dir
-    #
+    #   nginx_ssl: True|False  - config nginx to use ssl certs
     #   nginx_ssl_dest_dir
+    #
+    # provisioning:
+    #   local_certs_dir: local dir to copy ssl certs from
+    #   service_venv_dir
     #   nginx_access_log_path
     #   nginx_error_log_path
     #   nginx_static_dir
     #   nginx_media_dir
+    #
+    # config:
+    #   webserver_dns
+    #   nginx_ssl: True|False  - config nginx to use ssl certs
+    #
     - include_tasks: install_packages.yml
     - include_tasks: install_ssl_certs.yml
     - include_tasks: config_web_service.yml

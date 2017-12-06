@@ -9,13 +9,13 @@ upstream {{ service_name }}_wsgi_server {
 {% if with_ssl %}
 server {
     listen      80;
-    server_name {{ webserver_dns }};
+    server_name CATCHPY_WEBSERVER_DNS;
     return 301   https://$server_name$request_uri;
 }
 
 server {
     listen              443;
-    server_name         {{ webserver_dns }};
+    server_name         {{ CATCHPY_WEBSERVER_DNS }};
     ssl on;
     ssl_certificate     {{ nginx_ssl_dest_dir }}/{{ service_name }}.crt;
     ssl_certificate_key {{ nginx_ssl_dest_dir }}/{{ service_name }}.key;
@@ -68,7 +68,7 @@ server {
 {% else %}
 server {
     listen              80;
-    server_name         {{ webserver_dns }};
+    server_name         {{ CATCHPY_WEBSERVER_DNS }};
 
     client_max_body_size 4G;
 
