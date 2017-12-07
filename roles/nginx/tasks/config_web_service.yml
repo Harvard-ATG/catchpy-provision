@@ -3,18 +3,29 @@
 
     - name: link ssl cert to correct file
       file:
-        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}.crt"
+        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}_bundle.crt"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
         state: link
       notify: restart nginx
 
 
-    - name: replace the webserver_dns in nginx config
+    - name: link ssl key to correct file
+      file:
+        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}.key"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
+        state: link
+      notify: restart nginx
+
+
+    - name: replace server_name with webserver_dns in both (ssl, nonssl) nginx config
       replace:
-        path: /etc/nginx/sites-available/{{ nginx_ssl is True | ternary('', 'nonssl_') }}{{ service_name }}
+        path: /etc/nginx/sites-available/{{ item }}{{ service_name }}
         regexp: "CATCHPY_WEBSERVER_DNS"
         replace: "{{ webserver_dns }}"
         backup: yes
+      with_items:
+          - ''
+          - 'nonssl_'
 
 
     - name: ensure service site is enabled
