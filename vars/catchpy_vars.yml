@@ -60,14 +60,15 @@ nginx_ssl_dest_dir: "/etc/ssl/certs"
 nginx_static_dir: "{{ service_static_rootdir }}/"
 nginx_media_dir: "{{ nginx_static_dir }}"
 local_certs_dir: "{{ lookup('env', 'CATCHPY_LOCAL_CERTS_DIR') | default('./certs', true) }}"
-enable_ssl: "{{ lookup('env', 'CATCHPY_ENABLE_SSL') | default(false, true) }}"
+enable_ssl: "{{ lookup('env', 'CATCHPY_ENABLE_SSL') | default('false', true) }}"
 
 service_git_repo: "https://github.com/nmaekawa/catchpy.git"
 # this has to be a __version__ tag for successful verification in DEPLOYMENT:
 # you can use " master" when installing for the first time
 service_git_revision: "{{ lookup('env', 'CATCHPY_GIT_REVISION') | default('master', true) }}"
 
-use_aws: "{{ lookup('env', 'CATCHPY_USE_AWS') | default(false, true) }}"
+use_aws: "{{ lookup('env', 'CATCHPY_USE_AWS') | default('false', true) }}"
+my_remote_user: "{{ (use_aws == 'true') | ternary('ubuntu', 'vagrant') }}"
 
 ebs_device: "/dev/xvdb"
 ebs_mountpoint: "{{ hx_rootdir }}"
