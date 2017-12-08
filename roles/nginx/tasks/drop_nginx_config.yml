@@ -2,7 +2,6 @@
     - name: nginx configuration file
       template:
         src: "service_config.j2"
-        dest: /etc/nginx/sites-available/{{ with_ssl is True | ternary('', 'nonssl_') }}{{ service_name }}
+        dest: /etc/nginx/sites-available/{{ with_ssl == true | ternary('', 'nonssl_') }}{{ service_name }}
         backup: yes
-
 

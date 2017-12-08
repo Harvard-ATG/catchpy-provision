@@ -6,6 +6,7 @@
         src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}_bundle.crt"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
         state: link
+      when: enable_ssl == 'true'
       notify: restart nginx
 
 
@@ -14,23 +15,30 @@
         src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}.key"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
         state: link
+      when: enable_ssl == 'true'
       notify: restart nginx
 
 
-    - name: replace server_name with webserver_dns in both (ssl, nonssl) nginx config
+    - name: replace server_name with webserver_dns in nginx config
       replace:
-        path: /etc/nginx/sites-available/{{ item }}{{ service_name }}
+        path: /etc/nginx/sites-available/{{ service_name }}
         regexp: "CATCHPY_WEBSERVER_DNS"
         replace: "{{ webserver_dns }}"
         backup: yes
-      with_items:
-          - ''
-          - 'nonssl_'
+      when: enable_ssl == 'true'
+
+
+    - name: replace server_name with webserver_dns in nonssl nginx config
+      replace:
+        path: /etc/nginx/sites-available/nonssl_{{ service_name }}
+        regexp: "CATCHPY_WEBSERVER_DNS"
+        replace: "{{ webserver_dns }}"
+        backup: yes
 
 
     - name: ensure service site is enabled
       file:
-        src: /etc/nginx/sites-available/{{ nginx_ssl is True | ternary('', 'nonssl_') }}{{ service_name }}
+        src: /etc/nginx/sites-available/{{ enable_ssl == true | ternary('', 'nonssl_') }}{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
       notify: restart nginx

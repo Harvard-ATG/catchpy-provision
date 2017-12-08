@@ -3,7 +3,7 @@
     #
     # common:
     #   service_name
-    #   nginx_ssl: True|False  - config nginx to use ssl certs
+    #   enable_ssl: True|False  - config nginx to use ssl certs
     #   nginx_ssl_dest_dir
     #
     # provision:
