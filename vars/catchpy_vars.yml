@@ -37,6 +37,7 @@ db_backup_local_retention_in_days: 7
 db_backup_s3_retention: "6 months"
 db_log_retention_in_days: 90
 
+webserver_dns: "{{ lookup('env', 'CATCHPY_WEBSERVER_DNS') | default('catchpy.vm', true) }}"
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_filename: "gunicorn_supervisor.log"
 service_log_path: "{{ service_log_dir }}/{{ service_log_filename }}"
