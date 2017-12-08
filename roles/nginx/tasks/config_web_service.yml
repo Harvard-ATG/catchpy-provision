@@ -1,5 +1,19 @@
 ---
-    # at this point, we know webserver_dns
+    - name: replace server_name with webserver_dns in nginx config
+      replace:
+        path: /etc/nginx/sites-available/ssl_{{ service_name }}
+        regexp: '^(\s+)server_name\s+.*$'
+        replace: '\1server_name    {{ webserver_dns }};'
+        backup: yes
+      when: enable_ssl == 'true'
+
+
+    - name: replace server_name with webserver_dns in nonssl nginx config
+      replace:
+        path: /etc/nginx/sites-available/nonssl_{{ service_name }}
+        regexp: '^(\s+)server_name\s+.*$'
+        replace: '\1server_name {{ webserver_dns }}'
+        backup: yes
 
     - name: link ssl cert to correct file
       file:
@@ -19,26 +33,9 @@
       notify: restart nginx
 
 
-    - name: replace server_name with webserver_dns in nginx config
-      replace:
-        path: /etc/nginx/sites-available/{{ service_name }}
-        regexp: '^(.*)server_name.*$'
-        replace: '\1server_name    {{ webserver_dns }}'
-        backup: yes
-      when: enable_ssl == 'true'
-
-
-    - name: replace server_name with webserver_dns in nonssl nginx config
-      replace:
-        path: /etc/nginx/sites-available/nonssl_{{ service_name }}
-        regexp: '^(.*)server_name.*$'
-        replace: '\1server_name {{ webserver_dns }}'
-        backup: yes
-
-
     - name: ensure service site is enabled
       file:
-        src: /etc/nginx/sites-available/{{ (enable_ssl == true) | ternary('', 'nonssl_') }}{{ service_name }}
+        src: /etc/nginx/sites-available/{{ (enable_ssl == 'true') | ternary('ssl', 'nonssl') }}_{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
       notify: restart nginx

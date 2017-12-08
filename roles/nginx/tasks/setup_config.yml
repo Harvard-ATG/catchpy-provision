@@ -5,9 +5,9 @@
 
     # create sites-available
     # with_ssl is internal to the template; enable_ssl defines if catchpy will use https
-    - include_tasks: drop_nginx_config.yml  with_ssl=true
+    - include_tasks: drop_nginx_config.yml  with_ssl='true'
       when: enable_ssl == 'true'
-    - include_tasks: drop_nginx_config.yml  with_ssl=false
+    - include_tasks: drop_nginx_config.yml  with_ssl='false'
 
     # disabled default site
     - name: ensure default site is disabled

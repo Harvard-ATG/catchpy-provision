@@ -6,7 +6,7 @@ upstream {{ service_name }}_wsgi_server {
   server unix:{{ service_venv_dir }}/run/gunicorn.sock fail_timeout=0;
 }
 
-{% if (with_ssl == True) %}
+{% if (with_ssl == 'true') %}
 server {
     listen      80;
     server_name CATCHPY_WEBSERVER_DNS;
