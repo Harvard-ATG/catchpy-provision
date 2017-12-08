@@ -6,7 +6,7 @@ upstream {{ service_name }}_wsgi_server {
   server unix:{{ service_venv_dir }}/run/gunicorn.sock fail_timeout=0;
 }
 
-{% if with_ssl %}
+{% if (with_ssl == True) %}
 server {
     listen      80;
     server_name CATCHPY_WEBSERVER_DNS;
@@ -15,7 +15,7 @@ server {
 
 server {
     listen              443;
-    server_name         {{ CATCHPY_WEBSERVER_DNS }};
+    server_name         CATCHPY_WEBSERVER_DNS;
     ssl on;
     ssl_certificate     {{ nginx_ssl_dest_dir }}/{{ service_name }}.crt;
     ssl_certificate_key {{ nginx_ssl_dest_dir }}/{{ service_name }}.key;
@@ -68,7 +68,7 @@ server {
 {% else %}
 server {
     listen              80;
-    server_name         {{ CATCHPY_WEBSERVER_DNS }};
+    server_name         CATCHPY_WEBSERVER_DNS;
 
     client_max_body_size 4G;
 

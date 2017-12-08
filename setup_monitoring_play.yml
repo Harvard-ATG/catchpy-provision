@@ -25,7 +25,6 @@
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
-    - vars/catchpy_aws_vars.yml
 
   handlers:
     - include_tasks: handlers/handlers.yml

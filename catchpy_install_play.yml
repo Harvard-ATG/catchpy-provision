@@ -5,6 +5,8 @@
   become: yes
   become_user: root
   gather_facts: False
+  vars_files:
+    - vars/catchpy_vars.yml
 
   tasks:
   - name: install python2
@@ -17,7 +19,6 @@
   become_user: root
   vars_files:
     - vars/catchpy_vars.yml
-    - vars/catchpy_aws_vars.yml
     - vars/users_public_keys.yml
 
   handlers:

@@ -6,6 +6,7 @@
         mode: 0644
       with_fileglob:
         - "{{ local_certs_dir }}/*.crt"
+      when: enable_ssl == 'true'
 
     - name: copy ssl private_key to service host
       copy:
@@ -14,4 +15,5 @@
         mode: 0600
       with_fileglob:
         - "{{ local_certs_dir }}/*.key"
+      when: enable_ssl == 'true'
 

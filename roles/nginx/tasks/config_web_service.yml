@@ -38,7 +38,7 @@
 
     - name: ensure service site is enabled
       file:
-        src: /etc/nginx/sites-available/{{ enable_ssl == true | ternary('', 'nonssl_') }}{{ service_name }}
+        src: /etc/nginx/sites-available/{{ (enable_ssl == true) | ternary('', 'nonssl_') }}{{ service_name }}
         dest: /etc/nginx/sites-enabled/{{ service_name }}
         state: link
       notify: restart nginx
