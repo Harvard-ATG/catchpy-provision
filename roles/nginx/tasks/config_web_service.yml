@@ -22,8 +22,8 @@
     - name: replace server_name with webserver_dns in nginx config
       replace:
         path: /etc/nginx/sites-available/{{ service_name }}
-        regexp: "CATCHPY_WEBSERVER_DNS"
-        replace: "{{ webserver_dns }}"
+        regexp: '^(.*)server_name.*$'
+        replace: '\1server_name    {{ webserver_dns }}'
         backup: yes
       when: enable_ssl == 'true'
 
@@ -31,8 +31,8 @@
     - name: replace server_name with webserver_dns in nonssl nginx config
       replace:
         path: /etc/nginx/sites-available/nonssl_{{ service_name }}
-        regexp: "CATCHPY_WEBSERVER_DNS"
-        replace: "{{ webserver_dns }}"
+        regexp: '^(.*)server_name.*$'
+        replace: '\1server_name {{ webserver_dns }}'
         backup: yes
 
 
