@@ -9,7 +9,7 @@ catch_jwt=$({{ service_venv_dir }}/bin/python {{ hx_rootdir }}/bin/make_jwt.py {
 response_time=$(curl -w "%{time_total}" \
     --silent \
     -H "Authorization: token ${catch_jwt}" \
-    {{ (env == "prod") | ternary("https", "http") }}://{{ webserver_dns }}/is_alive \
+    {{ (enable_ssl == "true") | ternary("https", "http") }}://{{ webserver_dns }}/is_alive \
     -o {{ hx_rootdir }}/tmp/is_alive_response.json)
 
 # check that payload is ok from is_alive response; needs to install jq

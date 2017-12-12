@@ -17,4 +17,4 @@
         state: present
         job: >
             {{ hx_rootdir }}/bin/{{ service_name }}_response_time_metric.sh 2>&1 | logger -t info
-      when: "'catchpy' in group_names"
+      when: "'tag_role_webserver' in group_names"

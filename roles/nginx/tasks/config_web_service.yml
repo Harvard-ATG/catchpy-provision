@@ -15,21 +15,39 @@
         replace: '\1server_name {{ webserver_dns }}'
         backup: yes
 
-    - name: link ssl cert to correct file
+    - name: link ssl cert to correct file for prod cluster
       file:
-        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}_bundle.crt"
+        src: "{{ nginx_ssl_dest_dir }}/{{ service_name }}_harvardx_harvard_edu_bundle.crt"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
         state: link
-      when: enable_ssl == 'true'
+      when: enable_ssl == 'true' and ec2_tag_cluster == 'prod'
+      notify: restart nginx
+
+
+    - name: link ssl key to correct file for prod cluster
+      file:
+        src: "{{ nginx_ssl_dest_dir }}/{{ service_name }}_harvardx_harvard_edu.key"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
+        state: link
+      when: enable_ssl == 'true' and ec2_tag_cluster == 'prod'
+      notify: restart nginx
+
+
+    - name: link ssl cert to correct file
+      file:
+        src: "{{ nginx_ssl_dest_dir }}/all_{{ service_name }}_harvardx_harvard_edu_bundle.crt"
+        dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
+        state: link
+      when: enable_ssl == 'true' and ec2_tag_cluster != 'prod'
       notify: restart nginx
 
 
     - name: link ssl key to correct file
       file:
-        src: "{{ nginx_ssl_dest_dir }}/{{ webserver_dns | replace('.', '_') }}.key"
+        src: "{{ nginx_ssl_dest_dir }}/all_{{ service_name }}_harvardx_harvard_edu.key"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
         state: link
-      when: enable_ssl == 'true'
+      when: enable_ssl == 'true' and ec2_tag_cluster != 'prod'
       notify: restart nginx
 
 

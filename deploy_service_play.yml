@@ -2,7 +2,7 @@
 ---
 
 
-- hosts: catchpy
+- hosts: tag_role_webserver
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
@@ -16,7 +16,7 @@
     - webapp_deploy
     - { role: webapp_config, when: update_configs is defined and update_configs == True}
 
-- hosts: catchpy
+- hosts: tag_role_webserver
   remote_user: "{{ my_remote_user }}"
   become: yes
   become_user: root
