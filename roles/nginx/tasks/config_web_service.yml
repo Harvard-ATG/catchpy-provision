@@ -1,4 +1,8 @@
 ---
+    - name: compose the cert filename
+      set_fact:
+          cert_partial_filename: "{{ service_name }}_{{ org_dns_domain | replace('.', '_') }}"
+
     - name: replace server_name with webserver_dns in nginx config
       replace:
         path: /etc/nginx/sites-available/ssl_{{ service_name }}
@@ -17,7 +21,7 @@
 
     - name: link ssl cert to correct file for prod cluster
       file:
-        src: "{{ nginx_ssl_dest_dir }}/{{ service_name }}_harvardx_harvard_edu_bundle.crt"
+        src: "{{ nginx_ssl_dest_dir }}/{{ cert_partial_filename }}_bundle.crt"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
         state: link
       when: enable_ssl == 'true' and ec2_tag_cluster == 'prod'
@@ -26,7 +30,7 @@
 
     - name: link ssl key to correct file for prod cluster
       file:
-        src: "{{ nginx_ssl_dest_dir }}/{{ service_name }}_harvardx_harvard_edu.key"
+        src: "{{ nginx_ssl_dest_dir }}/{{ cert_partial_filename }}.key"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
         state: link
       when: enable_ssl == 'true' and ec2_tag_cluster == 'prod'
@@ -35,7 +39,7 @@
 
     - name: link ssl cert to correct file
       file:
-        src: "{{ nginx_ssl_dest_dir }}/all_{{ service_name }}_harvardx_harvard_edu_bundle.crt"
+        src: "{{ nginx_ssl_dest_dir }}/all_{{ cert_partial_filename }}_bundle.crt"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.crt"
         state: link
       when: enable_ssl == 'true' and ec2_tag_cluster != 'prod'
@@ -44,7 +48,7 @@
 
     - name: link ssl key to correct file
       file:
-        src: "{{ nginx_ssl_dest_dir }}/all_{{ service_name }}_harvardx_harvard_edu.key"
+        src: "{{ nginx_ssl_dest_dir }}/all_{{ cert_partial_filename }}.key"
         dest: "{{ nginx_ssl_dest_dir }}/{{ service_name }}.key"
         state: link
       when: enable_ssl == 'true' and ec2_tag_cluster != 'prod'
