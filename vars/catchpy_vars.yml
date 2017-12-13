@@ -1,6 +1,5 @@
 ---
 
-env: dev
 python_version: 3
 postgres_version: 9.6
 
@@ -67,8 +66,8 @@ service_git_repo: "https://github.com/nmaekawa/catchpy.git"
 # you can use " master" when installing for the first time
 service_git_revision: "{{ lookup('env', 'CATCHPY_GIT_REVISION') | default('master', true) }}"
 
-use_aws: "{{ lookup('env', 'CATCHPY_USE_AWS') | default('false', true) }}"
-my_remote_user: "{{ (use_aws == 'true') | ternary('ubuntu', 'vagrant') }}"
+use_aws: "{{ (ec2_tag_cluster == 'vagrant') | ternary(False, True) }}"
+my_remote_user: "{{ use_aws | ternary('ubuntu', 'vagrant') }}"
 
 ebs_device: "/dev/xvdb"
 ebs_mountpoint: "{{ hx_rootdir }}"
