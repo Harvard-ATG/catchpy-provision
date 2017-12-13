@@ -3,6 +3,7 @@
 python_version: 3
 postgres_version: 9.6
 
+org_dns_domain: "harvardx.harvard.edu"
 hx_rootdir: "/opt/hx"
 
 service_name: catchpy
