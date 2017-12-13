@@ -20,7 +20,6 @@ service_bin_dir: "{{ service_rootdir }}/bin"
 service_venv_dir: "{{ service_rootdir }}/venvs/{{ service_name }}"
 service_static_rootdir: "{{ service_rootdir }}/www"
 
-service_db_host: "{{ lookup('env', 'CATCHPY_DB_HOST') | default('postgres.vm', true) }}"
 service_db_name: "{{ lookup('env', 'CATCHPY_DB_NAME') | default(service_name , true) }}"
 service_db_user: "{{ lookup('env', 'CATCHPY_DB_USER') | default(service_name, true) }}"
 service_db_password: "{{ lookup('env', 'CATCHPY_DB_PASSWORD') | default(service_name, true) }}"
@@ -36,7 +35,6 @@ db_backup_local_retention_in_days: 7
 db_backup_s3_retention: "6 months"
 db_log_retention_in_days: 90
 
-webserver_dns: "{{ lookup('env', 'CATCHPY_WEBSERVER_DNS') | default('catchpy.vm', true) }}"
 service_dotenv_path: "{{ service_config_dir }}/{{ service_name }}.env"
 service_log_filename: "gunicorn_supervisor.log"
 service_log_path: "{{ service_log_dir }}/{{ service_log_filename }}"
