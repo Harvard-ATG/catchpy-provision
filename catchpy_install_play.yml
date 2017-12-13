@@ -46,6 +46,7 @@
     - include: handlers/handlers.yml
 
   roles:
+    - facts_setup
     - postgresql
 
 
@@ -60,6 +61,7 @@
     - include: handlers/handlers.yml
 
   roles:
+    - facts_setup
     - python_venv
     - webapp_install
     - webapp_config
